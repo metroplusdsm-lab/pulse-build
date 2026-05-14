@@ -742,7 +742,10 @@ async function sendMessage() {
     });
 
     const data = await response.json();
-    const reply = data.content?.[0]?.text || "I hit an error — please try again.";
+    console.log('Edge fn response:', JSON.stringify(data));
+    // Handle both direct Anthropic response and possible wrapper
+    const content = data.content || data?.message?.content || data?.data?.content;
+    const reply = content?.[0]?.text || data?.error || "I hit an error — please try again.";
 
     // Remove typing indicator
     document.getElementById('typingIndicator')?.remove();
