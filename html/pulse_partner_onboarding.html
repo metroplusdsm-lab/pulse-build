@@ -762,8 +762,11 @@ async function sendMessage() {
     });
 
   } catch (err) {
+    console.error('Fetch error:', err);
+    console.error('Error message:', err.message);
+    console.error('Error name:', err.name);
     document.getElementById('typingIndicator')?.remove();
-    appendMessage('assistant', 'Something went wrong connecting to the AI. Please try again.');
+    appendMessage('assistant', 'Error: ' + err.name + ' — ' + err.message);
   }
 
   document.getElementById('sendBtn').disabled = false;
