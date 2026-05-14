@@ -1,0 +1,180 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+  .wrap { font-family: 'DM Sans', sans-serif; padding: 2rem 0 3rem; color: var(--color-text-primary); }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 0.5px; background: var(--color-border-tertiary); }
+  .layer { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 1.25rem; overflow: hidden; }
+  .layer-header { padding: 0.85rem 1.1rem; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+  .layer-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .layer-title { font-weight: 500; font-size: 14px; }
+  .layer-sub { font-size: 12px; color: var(--color-text-secondary); }
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0; }
+  .tool { padding: 0.8rem 1rem; border-right: 0.5px solid var(--color-border-tertiary); }
+  .tool:last-child { border-right: none; }
+  .tool-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .tool-use { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+  .tag-you { background: #E1F5EE; color: #085041; }
+  .tag-both { background: #E6F1FB; color: #0C447C; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 2rem 0; }
+  .flow-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 1.1rem; }
+  .flow-num { width: 24px; height: 24px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; color: var(--color-text-secondary); }
+  .flow-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .flow-detail { font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+  .callout { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin-top: 2rem; }
+  .callout strong { font-weight: 500; color: var(--color-text-primary); }
+  .limit-box { border: 0.5px solid var(--color-border-tertiary); border-left: 2.5px solid #EF9F27; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 0.85rem 1rem; margin-bottom: 0.75rem; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .limit-box strong { font-weight: 500; color: var(--color-text-primary); }
+</style>
+
+<div class="wrap">
+  <h2 style="display:none" class="sr-only">Collaboration stack for Pulse build</h2>
+
+  <div class="section-label">Your tool stack, assigned a role</div>
+
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-icon" style="background:#E1F5EE; color:#085041;"><i class="ti ti-brain" aria-hidden="true"></i></div>
+      <div>
+        <div class="layer-title">Claude (this) — the build environment <span class="tag tag-you">you only</span></div>
+        <div class="layer-sub">Where the product is designed, written, and iterated on</div>
+      </div>
+    </div>
+    <div class="tools-grid">
+      <div class="tool">
+        <div class="tool-name">Claude Projects</div>
+        <div class="tool-use">PRODUCT_DEFINITION.md lives here. Your persistent context for every session.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">HTML file output</div>
+        <div class="tool-use">Every deliverable — app screens, checklists, briefings — downloaded from here.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">Obsidian</div>
+        <div class="tool-use">Your local knowledge base. Notes, decisions, meeting logs feed back into Claude as context.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-icon" style="background:#E6F1FB; color:#0C447C;"><i class="ti ti-versions" aria-hidden="true"></i></div>
+      <div>
+        <div class="layer-title">GitHub — source of truth for files <span class="tag tag-both">you + partner</span></div>
+        <div class="layer-sub">Where finished HTML files live, get versioned, and get shared</div>
+      </div>
+    </div>
+    <div class="tools-grid">
+      <div class="tool">
+        <div class="tool-name">Repository</div>
+        <div class="tool-use">One repo: <code style="font-size:11px">pulse-build</code>. All HTML files committed here after Claude produces them.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">GitHub Pages</div>
+        <div class="tool-use">Free hosting. Every file in the repo gets a live URL instantly. Your partner can preview anything in a browser, anywhere.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">Issues / Discussions</div>
+        <div class="tool-use">Your partner logs feedback here. You pick it up asynchronously. No Slack needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-icon" style="background:#FAEEDA; color:#854F0B;"><i class="ti ti-file-description" aria-hidden="true"></i></div>
+      <div>
+        <div class="layer-title">Google Drive / Docs — non-code collaboration <span class="tag tag-both">you + partner</span></div>
+        <div class="layer-sub">Docs, decks, briefs — anything that isn't code</div>
+      </div>
+    </div>
+    <div class="tools-grid">
+      <div class="tool">
+        <div class="tool-name">Google Docs</div>
+        <div class="tool-use">Sales scripts, pitch decks, client briefs. Easy for a non-technical partner to read, comment, edit.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">Shared Drive folder</div>
+        <div class="tool-use">One shared folder: <code style="font-size:11px">Pulse / Working Docs</code>. Single place for everything non-code.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-icon" style="background:#FAECE7; color:#993C1D;"><i class="ti ti-video" aria-hidden="true"></i></div>
+      <div>
+        <div class="layer-title">Video calls — sync communication <span class="tag tag-both">you + partner</span></div>
+        <div class="layer-sub">For decisions, demos, and feedback on live product</div>
+      </div>
+    </div>
+    <div class="tools-grid">
+      <div class="tool">
+        <div class="tool-name">FaceTime or Zoom</div>
+        <div class="tool-use">Weekly sync. You share your screen, walk through whatever Claude built that week. He reacts in real time.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-name">Screen sharing</div>
+        <div class="tool-use">You open the GitHub Pages URL on your Mac Mini. He opens the same URL on his machine. You both see the live app — no screen share needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">The actual workflow, step by step</div>
+
+  <div class="flow-row">
+    <div class="flow-num">1</div>
+    <div>
+      <div class="flow-title">You build in Claude</div>
+      <div class="flow-detail">Design, write, and iterate on HTML files here. Download the finished file to your Mac Mini.</div>
+    </div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-num">2</div>
+    <div>
+      <div class="flow-title">Commit to GitHub</div>
+      <div class="flow-detail">Drop the file into your <code style="font-size:12px">pulse-build</code> repo and push. GitHub Pages immediately gives it a live URL like <code style="font-size:12px">yourname.github.io/pulse-build/checklist.html</code>.</div>
+    </div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-num">3</div>
+    <div>
+      <div class="flow-title">Share the URL with your partner</div>
+      <div class="flow-detail">Text or email him the link. He opens it in any browser on any device. No installs, no accounts, no friction.</div>
+    </div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-num">4</div>
+    <div>
+      <div class="flow-title">He gives feedback</div>
+      <div class="flow-detail">For quick reactions: text or voice note. For tracked feedback: a GitHub Issue on the repo. For doc edits: comments in Google Docs.</div>
+    </div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-num">5</div>
+    <div>
+      <div class="flow-title">You bring feedback back to Claude</div>
+      <div class="flow-detail">Paste his notes into this conversation, or into your Obsidian note for the next session. Iterate and repeat.</div>
+    </div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-num">6</div>
+    <div>
+      <div class="flow-title">Weekly video sync</div>
+      <div class="flow-detail">Walk through what's live on GitHub Pages together. Align on what to build next. Keep the loop short.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Honest limitations to know upfront</div>
+
+  <div class="limit-box"><strong>Claude can't collaborate directly with your partner.</strong> He doesn't have access to this project, and you wouldn't want to give it to him — this is your build environment. He interacts with outputs, not the process.</div>
+  <div class="limit-box"><strong>GitHub requires minimal setup from you.</strong> One repo, GitHub Pages turned on (Settings → Pages → Deploy from main). Takes 10 minutes. After that, every file you push is automatically live.</div>
+  <div class="limit-box"><strong>HTML files are self-contained but not a live app yet.</strong> Right now everything we build is a prototype — it looks and feels like an app but doesn't have a real backend. That's fine for this phase. When you're ready to deploy a real app, that's a Supabase + hosting conversation.</div>
+  <div class="limit-box"><strong>Obsidian doesn't sync to Claude automatically.</strong> You have to manually paste or upload notes from Obsidian when they're relevant. Keep a running <code style="font-size:11px">session-notes.md</code> in your project folder and paste the relevant bits at the start of each session.</div>
+
+</div>
