@@ -706,6 +706,7 @@ function appendMessage(role, content, isTyping = false) {
 }
 
 function escapeHtml(str) {
+  if (!str || typeof str !== 'string') return String(str || '');
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
@@ -743,9 +744,8 @@ async function sendMessage() {
 
     const data = await response.json();
     console.log('Edge fn response:', JSON.stringify(data));
-    // Handle both direct Anthropic response and possible wrapper
     const content = data.content || data?.message?.content || data?.data?.content;
-    const reply = content?.[0]?.text || data?.error || "I hit an error — please try again.";
+    const reply = String(content?.[0]?.text || data?.error || "I hit an error — please try again.");
 
     // Remove typing indicator
     document.getElementById('typingIndicator')?.remove();
