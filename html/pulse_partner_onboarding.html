@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — Partner Onboarding</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent-soft: rgba(108,99,255,0.12);
+      --accent-glow: rgba(108,99,255,0.25);
+      --green: #22c55e;
+      --green-soft: rgba(34,197,94,0.12);
+      --text: #e8e8f0;
+      --text-muted: #7a7a9a;
+      --text-dim: #4a4a6a;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .status-badge {
+      font-size: 11px;
+      color: var(--green);
+      background: var(--green-soft);
+      border: 1px solid rgba(34,197,94,0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ── SETUP SCREEN ── */
+    .setup-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 65px);
+      padding: 40px 20px;
+    }
+
+    .setup-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .setup-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .setup-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 15px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .input-field:focus { border-color: var(--accent); }
+    .input-field::placeholder { color: var(--text-dim); }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      display: none;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      gap: 24px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .main.visible {
+      display: grid;
+    }
+
+    @media (max-width: 768px) {
+      .main.visible { grid-template-columns: 1fr; }
+      .header { padding: 16px 20px; }
+    }
+
+    /* ── PANELS ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .progress-pill {
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist-body {
+      padding: 8px 0;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .checklist-section {
+      padding: 14px 22px 6px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 0;
+    }
+
+    .checklist-item:hover { background: rgba(255,255,255,0.03); }
+
+    .checklist-item.checked .item-label {
+      color: var(--text-dim);
+      text-decoration: line-through;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      transition: all 0.2s;
+    }
+
+    .checklist-item.checked .checkbox {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .checkbox svg { display: none; }
+    .checklist-item.checked .checkbox svg { display: block; }
+
+    .item-text { flex: 1; }
+
+    .item-label {
+      font-size: 14px;
+      color: var(--text);
+      transition: color 0.2s;
+      line-height: 1.4;
+    }
+
+    .item-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .saving-indicator {
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 12px 22px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── CHAT ── */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 380px;
+      max-height: 500px;
+    }
+
+    .message {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .message.user { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .message.assistant .avatar {
+      background: var(--accent-soft);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: var(--accent);
+    }
+
+    .message.user .avatar {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .message.assistant .bubble {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-top-left-radius: 4px;
+    }
+
+    .message.user .bubble {
+      background: var(--accent);
+      color: white;
+      border-top-right-radius: 4px;
+    }
+
+    .typing-indicator .bubble {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 12px 16px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      animation: typing 1.2s ease-in-out infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-3px); }
+    }
+
+    .chat-input-area {
+      border-top: 1px solid var(--border);
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      resize: none;
+      min-height: 42px;
+      max-height: 120px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-input::placeholder { color: var(--text-dim); }
+
+    .send-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+      color: white;
+    }
+
+    .send-btn:hover { opacity: 0.85; }
+    .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── WELCOME MSG ── */
+    .welcome-banner {
+      background: var(--accent-soft);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0 16px 4px;
+    }
+
+    .welcome-banner strong { color: var(--text); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Pulse
+  </div>
+  <div id="statusBadge" class="status-badge" style="display:none">● Live</div>
+</header>
+
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <h2>Welcome to Pulse</h2>
+    <p>Enter your name to get started. Your progress and conversation will be saved automatically.</p>
+    <input
+      class="input-field"
+      type="text"
+      id="nameInput"
+      placeholder="Your first name"
+      autocomplete="off"
+    />
+    <button class="btn-primary" id="startBtn" onclick="startSession()">Get Started →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="main" id="mainApp">
+
+  <!-- LEFT: CHECKLIST -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Partner Checklist</span>
+      <span class="progress-pill" id="progressPill">0 / 0</span>
+    </div>
+    <div class="checklist-body" id="checklistBody"></div>
+    <div class="saving-indicator" id="savingIndicator">Changes save automatically</div>
+  </div>
+
+  <!-- RIGHT: CHAT -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Ask Pulse AI</span>
+      <span style="font-size:11px;color:var(--text-dim)">Knows your product</span>
+    </div>
+    <div class="welcome-banner">
+      <strong>This AI knows Pulse.</strong> Ask it anything about the product, your role as a sales partner, or what to expect from the onboarding process.
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <textarea
+        class="chat-input"
+        id="chatInput"
+        placeholder="Ask anything about Pulse…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL = 'https://evtjnjenlqycnkywkvwd.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dGpuamVubHF5Y25reXdrdndkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzkwNzQsImV4cCI6MjA5MTAxNTA3NH0.65FqQnBzIQ6addMObwmA46Q0NuhY5WC4djLrJkxaUU0';
+const EDGE_FN_URL = 'https://evtjnjenlqycnkywkvwd.supabase.co/functions/v1/pulse-chat';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── CHECKLIST DATA ──
+const CHECKLIST = [
+  {
+    section: "Understand the Product",
+    items: [
+      { key: "read_overview", label: "Read the Pulse product overview", sub: "What it is and the problem it solves" },
+      { key: "understand_3layers", label: "Understand the three layers", sub: "Manifest → Dashboard → AI Chatbot" },
+      { key: "understand_mvp", label: "Understand what the MVP includes", sub: "One owner, one location, ten metrics, one AI chat" },
+      { key: "understand_diff", label: "Understand what makes Pulse different", sub: "vs. Square analytics, vs. Looker, vs. Thryv" },
+    ]
+  },
+  {
+    section: "Know Your Role",
+    items: [
+      { key: "role_sales_only", label: "Confirm your role: Sales only", sub: "You bring clients — founder runs onboarding and build" },
+      { key: "know_icp", label: "Understand the target customer", sub: "Salon/spa owners in Phase 1" },
+      { key: "know_value_prop", label: "Memorize the core value prop", sub: "\"Your Square dashboard shows you what happened. Pulse shows you why.\"" },
+      { key: "know_pricing_context", label: "Know there's a setup fee + monthly subscription", sub: "Exact pricing TBD — ask founder before quoting" },
+    ]
+  },
+  {
+    section: "Get Ready to Sell",
+    items: [
+      { key: "identify_prospects", label: "Identify 3 potential first clients", sub: "Salon or spa owners you already know" },
+      { key: "first_convo", label: "Have your first exploratory conversation", sub: "Ask about their tools, their pain, their data gaps" },
+      { key: "report_back", label: "Report back to founder with what you learned", sub: "Text or voice note — any format works" },
+    ]
+  }
+];
+
+// ── STATE ──
+let sessionId = null;
+let partnerName = null;
+let checkState = {};
+let chatHistory = [];
+
+// ── PULSE SYSTEM PROMPT lives server-side in the Supabase edge function ──
+
+// ── SESSION START ──
+async function startSession() {
+  const nameVal = document.getElementById('nameInput').value.trim();
+  if (!nameVal) return;
+
+  partnerName = nameVal;
+  sessionId = 'partner_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('startBtn').textContent = 'Loading…';
+
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('mainApp').classList.add('visible');
+  document.getElementById('statusBadge').style.display = 'block';
+
+  await loadOrInitChecklist();
+  renderChecklist();
+  addWelcomeMessage();
+}
+
+// ── CHECKLIST INIT ──
+async function loadOrInitChecklist() {
+  // Try loading existing state by partner name
+  const { data } = await db
+    .from('pulse_partner_checklist')
+    .select('*')
+    .eq('partner_name', partnerName);
+
+  if (data && data.length > 0) {
+    // Reuse existing session
+    data.forEach(row => {
+      checkState[row.item_key] = { checked: row.checked, id: row.id, checked_at: row.checked_at };
+    });
+    // Use most recent session_id
+    sessionId = data[0].session_id;
+  } else {
+    // Create fresh rows for all items
+    const rows = CHECKLIST.flatMap(section =>
+      section.items.map(item => ({
+        session_id: sessionId,
+        partner_name: partnerName,
+        item_key: item.key,
+        item_label: item.label,
+        checked: false,
+      }))
+    );
+    const { data: inserted } = await db.from('pulse_partner_checklist').insert(rows).select();
+    if (inserted) {
+      inserted.forEach(row => {
+        checkState[row.item_key] = { checked: false, id: row.id };
+      });
+    }
+  }
+}
+
+// ── RENDER CHECKLIST ──
+function renderChecklist() {
+  const body = document.getElementById('checklistBody');
+  body.innerHTML = '';
+
+  CHECKLIST.forEach(section => {
+    const secDiv = document.createElement('div');
+    secDiv.className = 'checklist-section';
+
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = section.section;
+    secDiv.appendChild(label);
+    body.appendChild(secDiv);
+
+    section.items.forEach(item => {
+      const state = checkState[item.key] || { checked: false };
+      const div = document.createElement('div');
+      div.className = 'checklist-item' + (state.checked ? ' checked' : '');
+      div.dataset.key = item.key;
+      div.onclick = () => toggleItem(item.key);
+
+      div.innerHTML = `
+        <div class="checkbox">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2 6 5 9 10 3"></polyline>
+          </svg>
+        </div>
+        <div class="item-text">
+          <div class="item-label">${item.label}</div>
+          ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ''}
+        </div>
+      `;
+      body.appendChild(div);
+    });
+  });
+
+  updateProgress();
+}
+
+// ── TOGGLE ITEM ──
+async function toggleItem(key) {
+  const state = checkState[key] || { checked: false };
+  const newChecked = !state.checked;
+
+  // Optimistic UI
+  checkState[key] = { ...state, checked: newChecked };
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if (el) el.classList.toggle('checked', newChecked);
+  updateProgress();
+
+  const indicator = document.getElementById('savingIndicator');
+  indicator.textContent = 'Saving…';
+
+  // Save to Supabase
+  if (state.id) {
+    await db.from('pulse_partner_checklist')
+      .update({ checked: newChecked, checked_at: newChecked ? new Date().toISOString() : null, updated_at: new Date().toISOString() })
+      .eq('id', state.id);
+  }
+
+  indicator.textContent = 'Saved ✓';
+  setTimeout(() => { indicator.textContent = 'Changes save automatically'; }, 2000);
+}
+
+function updateProgress() {
+  const total = CHECKLIST.flatMap(s => s.items).length;
+  const done = Object.values(checkState).filter(s => s.checked).length;
+  document.getElementById('progressPill').textContent = `${done} / ${total}`;
+}
+
+// ── CHAT ──
+function addWelcomeMessage() {
+  const msg = `Hey ${partnerName}! I'm the Pulse AI — I know the product inside and out. Ask me anything: how it works, what to say to a client, what's in scope, what's not. What do you want to know?`;
+  appendMessage('assistant', msg);
+  chatHistory.push({ role: 'assistant', content: msg });
+}
+
+function appendMessage(role, content, isTyping = false) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'message ' + role + (isTyping ? ' typing-indicator' : '');
+  if (isTyping) div.id = 'typingIndicator';
+
+  const initial = role === 'assistant' ? 'P' : (partnerName ? partnerName[0].toUpperCase() : 'U');
+
+  div.innerHTML = `
+    <div class="avatar">${initial}</div>
+    <div class="bubble">${isTyping
+      ? '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>'
+      : escapeHtml(content).replace(/\n/g, '<br>')
+    }</div>
+  `;
+
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+
+  appendMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  // Save user message to DB
+  db.from('pulse_partner_chat').insert({
+    session_id: sessionId,
+    partner_name: partnerName,
+    role: 'user',
+    content: text
+  });
+
+  // Show typing indicator
+  appendMessage('assistant', '', true);
+
+  try {
+    const response = await fetch(EDGE_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: chatHistory.filter(m => m.role !== 'system').slice(-12)
+      })
+    });
+
+    const data = await response.json();
+    const reply = data.content?.[0]?.text || "I hit an error — please try again.";
+
+    // Remove typing indicator
+    document.getElementById('typingIndicator')?.remove();
+
+    appendMessage('assistant', reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+
+    // Save assistant reply to DB
+    db.from('pulse_partner_chat').insert({
+      session_id: sessionId,
+      partner_name: partnerName,
+      role: 'assistant',
+      content: reply
+    });
+
+  } catch (err) {
+    document.getElementById('typingIndicator')?.remove();
+    appendMessage('assistant', 'Something went wrong connecting to the AI. Please try again.');
+  }
+
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// Focus name input on load
+document.getElementById('nameInput').focus();
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startSession();
+});
+</script>
+</body>
+</html>
