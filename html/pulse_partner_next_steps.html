@@ -1,322 +1,174 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse — Partner Next Steps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
-
-  .wrap {
-    font-family: 'DM Sans', sans-serif;
-    color: var(--color-text-primary);
-    padding: 2rem 0 3rem;
-    max-width: 680px;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f6f2; --surface: #ffffff; --border: #e4e2da; --border-mid: #d0cec6;
+    --text: #1a1a18; --text-2: #6b6a64; --text-3: #9c9a92;
+    --green: #1D9E75; --green-light: #e1f5ee; --green-dark: #085041;
+    --amber-light: #faeeda; --amber-dark: #854F0B;
+    --blue-light: #e6f1fb; --blue-dark: #185FA5;
+    --coral-light: #faece7; --coral-dark: #993C1D;
+    --radius: 12px; --radius-sm: 8px;
   }
-
-  .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    margin: 0 0 0.4rem;
-  }
-
-  .page-sub {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    margin: 0 0 2rem;
-  }
-
-  .track {
-    margin-bottom: 2.5rem;
-  }
-
-  .track-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-
-  .track-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .icon-green { background: #E1F5EE; color: #0F6E56; }
-  .icon-amber { background: #FAEEDA; color: #854F0B; }
-  .icon-blue  { background: #E6F1FB; color: #185FA5; }
-  .icon-coral { background: #FAECE7; color: #993C1D; }
-
-  .track-name {
-    font-weight: 500;
-    font-size: 15px;
-  }
-
-  .track-why {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-  }
-
-  .task-list {
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-  }
-
-  .task {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 0.85rem 1.1rem;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 3rem 1.5rem 6rem; }
+  .container { max-width: 680px; margin: 0 auto; }
+  header { margin-bottom: 3rem; }
+  .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.6rem; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.15; margin-bottom: 0.75rem; }
+  .subtitle { font-size: 15px; color: var(--text-2); line-height: 1.65; }
+  .progress-wrap { margin-top: 1.5rem; }
+  .progress-bar { background: var(--border); border-radius: 99px; height: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
+  .progress-label { font-size: 12px; color: var(--text-3); margin-top: 6px; }
+  .track { margin-bottom: 2rem; }
+  .track-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 0.85rem; padding: 0 0.25rem; }
+  .track-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .track-name { font-weight: 500; font-size: 15px; line-height: 1.3; }
+  .track-why { font-size: 13px; color: var(--text-2); margin-top: 2px; line-height: 1.5; }
+  .task-list { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .task { display: flex; align-items: flex-start; gap: 12px; padding: 0.9rem 1.1rem; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.12s; user-select: none; }
   .task:last-child { border-bottom: none; }
-  .task:hover { background: var(--color-background-secondary); }
-
-  .task-check {
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--color-border-secondary);
-    border-radius: 4px;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-
-  .task-check.checked {
-    background: #1D9E75;
-    border-color: #1D9E75;
-  }
-
-  .task-check.checked::after {
-    content: '';
-    width: 5px;
-    height: 9px;
-    border: 2px solid white;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg) translateY(-1px);
-  }
-
-  .task-text {
-    flex: 1;
-  }
-
-  .task-title {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 2px;
-    color: var(--color-text-primary);
-  }
-
-  .task-detail {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    line-height: 1.55;
-  }
-
-  .divider {
-    height: 0.5px;
-    background: var(--color-border-tertiary);
-    margin: 2rem 0;
-  }
-
-  .callout {
-    background: var(--color-background-secondary);
-    border-radius: var(--border-radius-lg);
-    padding: 1rem 1.25rem;
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.65;
-    margin-top: 2rem;
-  }
-
-  .callout strong {
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
+  .task:hover { background: #faf9f6; }
+  .task.done .task-title { color: var(--text-3); }
+  .task.done .task-detail { color: #c4c2ba; }
+  .task-check { width: 20px; height: 20px; border: 1.5px solid var(--border-mid); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: white; }
+  .task.done .task-check { background: var(--green); border-color: var(--green); }
+  .checkmark { display: none; }
+  .task.done .checkmark { display: block; }
+  .task-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; line-height: 1.3; transition: color 0.15s; }
+  .task-detail { font-size: 13px; color: var(--text-2); line-height: 1.55; transition: color 0.15s; }
+  .divider { height: 0.5px; background: var(--border); margin: 2.5rem 0; }
+  .callout { background: var(--surface); border: 0.5px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; font-size: 14px; color: var(--text-2); line-height: 1.7; }
+  .callout strong { font-weight: 500; color: var(--text); }
+  .reset-btn { display: inline-block; margin-top: 2rem; font-size: 12px; color: var(--text-3); cursor: pointer; border: none; background: none; font-family: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .reset-btn:hover { color: var(--text-2); }
 </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Pulse — Partner Playbook</div>
+    <h1>What to do before there's anything to sell</h1>
+    <p class="subtitle">Four tracks of useful work. All executable right now, without needing access to the product.</p>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">0 of 15 tasks complete</div>
+    </div>
+  </header>
 
-<div class="wrap">
-  <h2 class="sr-only" style="display:none">Partner next steps before product launch</h2>
-
-  <div class="page-title">What to do before there's anything to sell</div>
-  <p class="page-sub">Four tracks of useful work. All executable right now. Click tasks to track progress.</p>
-
-  <!-- TRACK 1 -->
   <div class="track">
     <div class="track-header">
-      <div class="track-icon icon-green"><i class="ti ti-users" aria-hidden="true"></i></div>
+      <div class="track-icon" style="background:var(--green-light);color:var(--green-dark);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
       <div>
         <div class="track-name">Track 1 — Build the prospect list</div>
         <div class="track-why">When we're ready to sell, this list is everything. Building it now means day-one momentum.</div>
       </div>
     </div>
     <div class="task-list">
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Map your existing network for salon/spa owners</div>
-          <div class="task-detail">Who do you already know? Warm intros are 10x easier than cold outreach. Start there.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Research 20–30 target businesses in your area</div>
-          <div class="task-detail">Google Maps, Yelp, Instagram. Find owner-operated salons with 2–10 staff. Note their tools (Vagaro, Square, etc.) where visible.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Find the owner's name and contact for each</div>
-          <div class="task-detail">Instagram bio, Google business listing, LinkedIn. The goal is a name, not just a business — you're selling to a person.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Build it in a simple spreadsheet — name, business, contact, notes</div>
-          <div class="task-detail">Don't overthink the format. Four columns is enough. The habit of capturing it matters more than the tool.</div>
-        </div>
-      </div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Map your existing network for salon/spa owners</div><div class="task-detail">Who do you already know? Warm intros are 10x easier than cold outreach. Start there.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Research 20–30 target businesses in your area</div><div class="task-detail">Google Maps, Yelp, Instagram. Find owner-operated salons with 2–10 staff. Note their tools where visible.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Find the owner's name and contact for each</div><div class="task-detail">Instagram bio, Google business listing, LinkedIn. You're selling to a person, not a business.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Build it in a simple spreadsheet</div><div class="task-detail">Name, business, contact, notes. Four columns is enough. The habit of capturing it matters more than the tool.</div></div></div>
     </div>
   </div>
 
-  <!-- TRACK 2 -->
   <div class="track">
     <div class="track-header">
-      <div class="track-icon icon-amber"><i class="ti ti-ear" aria-hidden="true"></i></div>
+      <div class="track-icon" style="background:var(--amber-light);color:var(--amber-dark);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      </div>
       <div>
         <div class="track-name">Track 2 — Do discovery conversations</div>
-        <div class="track-why">Talking to owners before you pitch them is the single most useful thing you can do. You learn what they actually care about — and they start to trust you before you ever ask for money.</div>
+        <div class="track-why">Talking to owners before you pitch them is the single most useful thing you can do right now.</div>
       </div>
     </div>
     <div class="task-list">
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Have 5 casual conversations with salon/spa owners</div>
-          <div class="task-detail">Not a pitch. Genuine curiosity. "How do you keep track of your business performance?" "What's your biggest headache right now?"</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Ask about their current tools and what frustrates them</div>
-          <div class="task-detail">What do they use? Do they actually look at the analytics? What question do they wish they could answer easily?</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Write up what you hear after each conversation</div>
-          <div class="task-detail">Even just a paragraph. The patterns that emerge across 5 conversations will shape how we pitch and what language we use.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Share notes back with the founder</div>
-          <div class="task-detail">This is product research as much as it is sales groundwork. The feedback loop matters.</div>
-        </div>
-      </div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Have 5 casual conversations with salon/spa owners</div><div class="task-detail">Not a pitch. Genuine curiosity. "How do you keep track of your business performance?" "What's your biggest headache?"</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Ask about their tools and what frustrates them</div><div class="task-detail">What do they use? Do they look at the analytics? What question do they wish they could answer easily?</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Write up what you hear after each conversation</div><div class="task-detail">Even just a paragraph. Patterns across 5 conversations will shape how we pitch and what language we use.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Share notes back with the founder</div><div class="task-detail">This is product research as much as sales groundwork. The feedback loop matters.</div></div></div>
     </div>
   </div>
 
-  <!-- TRACK 3 -->
   <div class="track">
     <div class="track-header">
-      <div class="track-icon icon-blue"><i class="ti ti-writing" aria-hidden="true"></i></div>
+      <div class="track-icon" style="background:var(--blue-light);color:var(--blue-dark);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
       <div>
         <div class="track-name">Track 3 — Develop the sales pitch</div>
-        <div class="track-why">The pitch needs to exist before you can use it. Building it now, with the founder's input, means it's ready the moment there's something to show.</div>
+        <div class="track-why">Build it now so it's ready the moment there's something to show.</div>
       </div>
     </div>
     <div class="task-list">
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Write a one-paragraph version of the pitch in your own words</div>
-          <div class="task-detail">How would you explain Pulse to a salon owner over coffee? Write it like you'd say it — not like a brochure. Share it with the founder to refine.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Anticipate the top 5 objections and draft responses</div>
-          <div class="task-detail">"I already have Square analytics." "I don't have time to learn another tool." "What does this actually cost?" Better to work these out now than on the call.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Draft a short cold outreach message</div>
-          <div class="task-detail">DM, email, or text — whatever fits the audience. Keep it to 3–4 sentences. The goal is a conversation, not a sale.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Role-play the pitch with the founder at least once</div>
-          <div class="task-detail">Have them play a skeptical salon owner. The awkward moments in practice are the ones that would have killed real calls.</div>
-        </div>
-      </div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Write a one-paragraph pitch in your own words</div><div class="task-detail">How would you explain Pulse to a salon owner over coffee? Write it like you'd say it — not like a brochure.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Anticipate the top 5 objections and draft responses</div><div class="task-detail">"I already have Square analytics." "I don't have time for another tool." Work these out now, not on a live call.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Draft a short cold outreach message</div><div class="task-detail">DM, email, or text. Keep it 3–4 sentences. The goal is a conversation, not a sale.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Role-play the pitch with the founder at least once</div><div class="task-detail">Have them play a skeptical salon owner. Awkward moments in practice won't happen on real calls.</div></div></div>
     </div>
   </div>
 
-  <!-- TRACK 4 -->
   <div class="track">
     <div class="track-header">
-      <div class="track-icon icon-coral"><i class="ti ti-binoculars" aria-hidden="true"></i></div>
+      <div class="track-icon" style="background:var(--coral-light);color:var(--coral-dark);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
       <div>
         <div class="track-name">Track 4 — Know the landscape</div>
-        <div class="track-why">Prospects will mention competitors. You need to know what's out there, why Pulse is different, and how to say that without trashing anyone.</div>
+        <div class="track-why">Prospects will mention competitors. Know what's out there and how Pulse is different.</div>
       </div>
     </div>
     <div class="task-list">
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Spend 30 minutes with Square, Vagaro, and 7shifts</div>
-          <div class="task-detail">Look at their analytics sections specifically. What do they show? Where do they fall short? This makes you credible when owners bring them up.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Look up Thryv and Broadly briefly</div>
-          <div class="task-detail">These are the "replace everything" platforms. Know why Pulse is positioned differently — we connect, we don't replace.</div>
-        </div>
-      </div>
-      <div class="task" onclick="toggle(this)">
-        <div class="task-check"></div>
-        <div class="task-text">
-          <div class="task-title">Write one sentence for each competitor: "They do X, we do Y"</div>
-          <div class="task-detail">Simple, honest, not aggressive. This becomes your handle whenever a prospect asks "how is this different from what I already have?"</div>
-        </div>
-      </div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Spend 30 minutes with Square, Vagaro, and 7shifts</div><div class="task-detail">Look at their analytics sections. What do they show? Where do they fall short?</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Look up Thryv and Broadly briefly</div><div class="task-detail">These are the "replace everything" platforms. Pulse is different — we connect, we don't replace.</div></div></div>
+      <div class="task" onclick="toggle(this)"><div class="task-check"><svg class="checkmark" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="task-title">Write one sentence for each: "They do X, we do Y"</div><div class="task-detail">Simple, honest, not aggressive. Your handle whenever a prospect asks how Pulse is different.</div></div></div>
     </div>
   </div>
 
   <div class="divider"></div>
 
   <div class="callout">
-    <strong>The goal of all of this:</strong> by the time there's something to demo, you walk in with a warm list, a tested pitch, real insight into what owners care about, and a clear answer for every objection. That's not prep work — that's a head start most sales people don't have.
+    <strong>The goal:</strong> by the time there's something to demo, you walk in with a warm list, a tested pitch, real insight into what owners care about, and a clear answer for every objection. That's not prep work — that's a head start most salespeople never have.
   </div>
+
+  <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
 </div>
 
 <script>
-function toggle(el) {
-  const check = el.querySelector('.task-check');
-  check.classList.toggle('checked');
-}
+  const KEY = 'pulse-checklist-v1';
+  function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } }
+  function saveState(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+  function getId(el) { return 't' + Array.from(document.querySelectorAll('.task')).indexOf(el); }
+  function toggle(el) {
+    el.classList.toggle('done');
+    const s = getState(); s[getId(el)] = el.classList.contains('done'); saveState(s); update();
+  }
+  function update() {
+    const total = document.querySelectorAll('.task').length;
+    const done = document.querySelectorAll('.task.done').length;
+    document.getElementById('progress-fill').style.width = Math.round(done/total*100) + '%';
+    document.getElementById('progress-label').textContent = done + ' of ' + total + ' tasks complete';
+  }
+  function resetAll() {
+    if (!confirm('Reset all progress?')) return;
+    document.querySelectorAll('.task').forEach(t => t.classList.remove('done'));
+    saveState({}); update();
+  }
+  function restore() {
+    const s = getState();
+    document.querySelectorAll('.task').forEach((t, i) => { if (s['t'+i]) t.classList.add('done'); });
+    update();
+  }
+  restore();
 </script>
+</body>
+</html>
